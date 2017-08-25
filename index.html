@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Maestro-Detalle</title>
+  <script src="https://unpkg.com/vue"></script>
+  <script src="https://code.jquery.com/jquery.min.js"></script>
+
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+</head>
+<body>
+  <div id="app">
+      <h2>{{ title }}</h2>
+      <maestro-entrada></maestro-entrada>
+      <detalle-entrada></detalle-entrada>
+  </div>
+
+  <template id="maestro-entrada">
+      <div style="display:inline-block; vertical-align:top">
+        <ul class="w3-ul w3-card-4" >
+          <li><h2> Entradas </h2></li>
+          <li class="w3-hover-blue" v-for="Entrada in Entradas"> Precio: {{Entrada.Precio }}, Sala: {{ Entrada.Sala }} </li>
+        </ul>
+      </div>
+
+  </template>
+
+  <template id="detalle-entrada">
+    <div class="w3-container w3-card-4" style="display:inline-block; vertical-align:top">
+      <label class="w3-text" for="precio"> Precio </label>
+      <input class="w3-input w3-border" type="numeric" name="precio" value="Precio" v-model="Entrada.Precio">
+      <label class="w3-text" for="sala"> Sala </label>
+      <input class="w3-input w3-border" type="numeric" name="sala" value="Sala" v-model="Entrada.Sala">
+      <label class="w3-text" for="butaca"> Butaca </label>
+      <input class="w3-input w3-border" type="numeric" name="butaca" value="Butaca" v-model="Entrada.Butaca">
+      <label class="w3-text" for="fila"> Fila </label>
+      <input class="w3-input w3-border" type="numeric" name="fila" value="Fila" v-model="Entrada.Fila">
+    </div>
+  </template>
+
+
+
+  <script type="text/javascript" src="main.js"></script>
+</body>
+</html>
