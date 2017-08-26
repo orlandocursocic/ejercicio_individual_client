@@ -1,3 +1,6 @@
+// appConfig obtenida de condig.js
+var httpURL = appConfig.URLEntrada;
+
 $(document).ready( function() {
 
   Vue.component('app-icon', {
@@ -27,7 +30,7 @@ $(document).ready( function() {
           var _this = this;
           $.ajax(
             {
-              url : "http://localhost:52595/api/Entradas",
+              url : httpURL,
               type: "GET",
             })
             .done(function(data) {
@@ -87,7 +90,7 @@ $(document).ready( function() {
                   var _this = this;
                     $.ajax(
                       {
-                        url : "http://localhost:52595/api/Entradas/",
+                        url : httpURL,
                         type: "POST",
                         data: {
                           Precio: this.Entrada.Precio,
@@ -112,7 +115,7 @@ $(document).ready( function() {
                   var _this = this;
                   $.ajax(
                     {
-                      url : "http://localhost:52595/api/Entradas/" + this.Entrada.Id,
+                      url : httpURL + this.Entrada.Id,
                       type: "PUT",
                       data: {
                         Id: this.Entrada.Id,
@@ -137,7 +140,7 @@ $(document).ready( function() {
                     var _this = this;
                     $.ajax(
                       {
-                        url : "http://localhost:52595/api/Entradas/" + this.Entrada.Id,
+                        url : httpURL + this.Entrada.Id,
                         type: "DELETE",
                         data: {Id: this.Entrada.Id}
                       })
@@ -158,7 +161,7 @@ $(document).ready( function() {
                   $.ajax(
                     {
                       //TODO: NO OLVIDARSE DE ARREGLAR ENLACE: PONER ID PASADO POR PARAMETROS!!
-                      url : "http://localhost:52595/api/Entradas/5",
+                      url : httpURL + "5",
                       type: "GET",
                     })
                     .done(function(data) {
