@@ -5,7 +5,11 @@
   <script src="https://unpkg.com/vue"></script>
   <script src="https://code.jquery.com/jquery.min.js"></script>
 
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+      rel="stylesheet">
+
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
 </head>
 <body>
   <div id="app">
@@ -14,28 +18,80 @@
       <detalle-entrada></detalle-entrada>
   </div>
 
-  <template id="maestro-entrada">
+  <script type="text/x-template" id="maestro-entrada-template">
       <div style="display:inline-block; vertical-align:top">
         <ul class="w3-ul w3-card-4" >
           <li><h2> Entradas </h2></li>
           <li class="w3-hover-blue" v-for="Entrada in Entradas"> Precio: {{Entrada.Precio }}, Sala: {{ Entrada.Sala }} </li>
         </ul>
       </div>
+  </script>
 
-  </template>
-
-  <template id="detalle-entrada">
-    <div class="w3-container w3-card-4" style="display:inline-block; vertical-align:top">
+  <script type="text/x-template" id="detalle-entrada-template">
+  <div class="w3-container w3-card-4" style="display:inline-block; vertical-align:top">
+    <div>
+      <h2><strong>Entrada, precio: </strong>{{Entrada.Precio}}</h2>
       <label class="w3-text" for="precio"> Precio </label>
-      <input class="w3-input w3-border" type="numeric" name="precio" value="Precio" v-model="Entrada.Precio">
+      <input class="w3-input w3-border" type="numeric" name="precio" value="Precio" :disabled="!editing && !addingNew" v-model="Entrada.Precio">
       <label class="w3-text" for="sala"> Sala </label>
-      <input class="w3-input w3-border" type="numeric" name="sala" value="Sala" v-model="Entrada.Sala">
+      <input class="w3-input w3-border" type="numeric" name="sala" value="Sala" :disabled="!editing && !addingNew" v-model="Entrada.Sala">
       <label class="w3-text" for="butaca"> Butaca </label>
-      <input class="w3-input w3-border" type="numeric" name="butaca" value="Butaca" v-model="Entrada.Butaca">
+      <input class="w3-input w3-border" type="numeric" name="butaca" value="Butaca" :disabled="!editing && !addingNew" v-model="Entrada.Butaca">
       <label class="w3-text" for="fila"> Fila </label>
-      <input class="w3-input w3-border" type="numeric" name="fila" value="Fila" v-model="Entrada.Fila">
+      <input class="w3-input w3-border" type="numeric" name="fila" value="Fila" :disabled="!editing && !addingNew" v-model="Entrada.Fila">
     </div>
-  </template>
+
+    <br>
+
+    <div>
+    <template v-if="!addingNew">
+      <div style="float: left">
+        <button type="button" class="btn btn-default btn-sm" title="Nuevo" @click="editNew" :disabled="editing">
+            <app-icon img="plus"></app-icon>
+        </button>
+      </div>
+    </template>
+
+    <template v-else>
+        <div style="float: left">
+            <button type="button" class="btn btn-default btn-sm" title="Confirmar" @click="create">
+                <app-icon img="ok"></app-icon>
+            </button>
+            <button type="button" class="btn btn-default btn-sm" title="Descartar" @click="discardNew">
+                <app-icon img="remove"></app-icon>
+            </button>
+        </div>
+    </template>
+
+    <template v-if="!editing">
+        <div style="float: right">
+            <button type="button" class="btn btn-default btn-sm" title="Editar" @click="edit" :disabled="addingNew">
+                <app-icon img="edit"></app-icon>
+            </button>
+            <button type="button" class="btn btn-default btn-sm" title="Eliminar" @click="remove" :disabled="addingNew">
+                <app-icon img="trash"></app-icon>
+            </button>
+        </div>
+    </template>
+
+    <template v-else>
+        <div style="float: right">
+            <button type="button" class="btn btn-default btn-sm" title="Confirmar" @click="update()">
+                <app-icon img="ok"></app-icon>
+            </button>
+            <button type="button" class="btn btn-default btn-sm" title="Descartar" @click="discard">
+                <app-icon img="remove"></app-icon>
+            </button>
+        </div>
+    </template>
+  </div>
+  <div>
+    <p style="visibility: hidden">separador</p>
+  </div>
+    <br>
+
+  </div>
+</script>
 
 
 
