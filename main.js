@@ -1,5 +1,6 @@
 // appConfig obtenida de condig.js
 var httpURL = appConfig.URLEntrada;
+var EventBus = new Vue;
 
 $(document).ready( function() {
 
@@ -18,6 +19,24 @@ $(document).ready( function() {
 
       methods: {
 
+        loadList: function(){
+            var _this = this;
+            $.ajax(
+              {
+                url : httpURL,
+                type: "GET",
+              })
+              .done(function(data) {
+                _this.Entradas = data;
+              })
+              .fail(function(data) {
+                      alert( "error" );
+                });
+          },
+
+          entradaSelected: function(id){
+            EventBus.$emit('entradaSelected', id);
+          }
       },
 
       data: function () {
@@ -27,18 +46,11 @@ $(document).ready( function() {
         },
 
       mounted: function() {
-          var _this = this;
-          $.ajax(
-            {
-              url : httpURL,
-              type: "GET",
-            })
-            .done(function(data) {
-              _this.Entradas = data;
-            })
-            .fail(function(data) {
-                    alert( "error" );
-                  });
+          this.loadList();
+
+          EventBus.$on('updateListEntrada', function() {
+            this.loadList();
+          }.bind(this));
         }
       });
 
@@ -63,7 +75,6 @@ $(document).ready( function() {
                  this.Entrada.Sala = this.EntradaCopia.Sala;
                  this.Entrada.Butaca = this.EntradaCopia.Butaca;
                  this.Entrada.Fila = this.EntradaCopia.Fila;
-                 //this.Entrada = this.EntradaCopia;
                  this.addingNew = false;
                },
                 edit: function () {
@@ -71,7 +82,6 @@ $(document).ready( function() {
                   this.EntradaCopia.Sala = this.Entrada.Sala;
                   this.EntradaCopia.Butaca = this.Entrada.Butaca;
                   this.EntradaCopia.Fila = this.Entrada.Fila;
-                  //this.EntradaCopia = this.Entrada;
                   this.editing = true;
                  },
                 discard: function () {
@@ -79,14 +89,10 @@ $(document).ready( function() {
                   this.Entrada.Sala = this.EntradaCopia.Sala;
                   this.Entrada.Butaca = this.EntradaCopia.Butaca;
                   this.Entrada.Fila = this.EntradaCopia.Fila;
-                  //this.Entrada = this.EntradaCopia;
                   this.editing = false;
                 },
                 create: function () {
                   // TODO: UN MEJOR TRATAMIENTO DE ERRORES
-                  // TODO: SACAR URLs A FICHEROS DE CONFG
-                  // TODO: LANZAR EVENTO PARA QUE LO CAPTURE EL MAESTRO Y ACTUALICE
-                  // TODO: SI SE QUEDA PINTADO EL QUE SE HA CREADO, REALIZAR PETICION PARA TENER EL ID
                   var _this = this;
                     $.ajax(
                       {
@@ -101,7 +107,8 @@ $(document).ready( function() {
 
                       })
                       .done(function(data) {
-                        // LANZAR EVENTO
+                        alert('Entrada añadida con éxito.');
+                        EventBus.$emit('updateListEntrada');
                       })
                       .fail(function(data) {
                               alert( "error" );
@@ -110,8 +117,6 @@ $(document).ready( function() {
                 },
                 update: function () {
                   // TODO: UN MEJOR TRATAMIENTO DE ERRORES
-                  // TODO: SACAR URLs A FICHEROS DE CONFG
-                  // TODO: LANZAR EVENTO PARA QUE LO CAPTURE EL MAESTRO Y ACTUALICE
                   var _this = this;
                   $.ajax(
                     {
@@ -126,17 +131,16 @@ $(document).ready( function() {
                       }
                     })
                     .done(function(data) {
-                      // LANZAR EVENTO
+                      alert('Entrada actualizada con éxito.');
+                      EventBus.$emit('updateListEntrada');
                     })
                     .fail(function(data) {
                             alert( "error" );
                           });
                   this.editing = false;
                 },
-                remove: function (id) {
+                remove: function () {
                     // TODO: UN MEJOR TRATAMIENTO DE ERRORES
-                    // TODO: SACAR URLs A FICHEROS DE CONFG
-                    // TODO: LANZAR EVENTO PARA QUE LO CAPTURE EL MAESTRO Y ACTUALICE
                     var _this = this;
                     $.ajax(
                       {
@@ -145,23 +149,21 @@ $(document).ready( function() {
                         data: {Id: this.Entrada.Id}
                       })
                       .done(function(data) {
-                        // LANZAR EVENTO
+                        alert('Entrada eliminada con éxito.');
+                        EventBus.$emit('updateListEntrada');
                       })
                       .fail(function(data) {
                               alert( "error" );
                             });
                     this.editing = false;
                 },
-                load: function(){
-                  // TODO: QUE CONCATENE EL ID PARA REALIZAR LA PETICION
+                load: function(id){
                   // TODO: UN MEJOR TRATAMIENTO DE ERRORES
-                  // TODO: SACAR URLs A FICHEROS DE CONFG
-                  // TODO: LANZAR EVENTO PARA QUE LO CAPTURE EL MAESTRO Y ACTUALICE
                   var _this = this;
                   $.ajax(
                     {
                       //TODO: NO OLVIDARSE DE ARREGLAR ENLACE: PONER ID PASADO POR PARAMETROS!!
-                      url : httpURL + "5",
+                      url : httpURL + id,
                       type: "GET",
                     })
                     .done(function(data) {
@@ -195,15 +197,16 @@ $(document).ready( function() {
         },
 
         mounted: function() {
-          //TODO: QUE INICIALICE CAMPOS VACIOS O NO HAGA NADA
-          this.load();
+          EventBus.$on('entradaSelected', function(id) {
+            this.load(id);
+          }.bind(this));
         }
     });
 
     var app = new Vue({
       el: '#app',
       data: {
-        title: 'Maestro-Detalle (Sin enlace con Maestro)',
+        title: 'Maestro-Detalle de Entrada',
       }
     });
 });
